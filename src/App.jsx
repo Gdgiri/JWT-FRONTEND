@@ -4,12 +4,16 @@ import Register from "./Pages/Register";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Profile from "./Pages/Profile";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const [token, setToken] = useState("");
   return (
     <div>
       <BrowserRouter>
+        <div>
+          <ToastContainer />
+        </div>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />

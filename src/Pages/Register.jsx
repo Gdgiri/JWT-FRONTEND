@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
-  const [isSuccess, setIsSuccess] = useState(null); // New state to track success or failure
+  const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
 
   const gotoLogin = () => {
-    setTimeout(() => {
-      navigate("/login");
-    }, 1000);
+    navigate("/login");
   };
 
   const handleSubmit = async (e) => {
@@ -28,29 +27,22 @@ const Register = () => {
         "http://localhost:5000/api/user/register-user",
         payload
       );
-      setMsg(res.data.message);
-      setIsSuccess(true); // Set to true on success
+      toast.success(res.data.message); // Show success toast
+      setIsSuccess(true);
 
-      // Clear the input fields after successful registration
+      // Clear input fields after success
       setUsername("");
       setEmail("");
       setPassword("");
       setRole("");
 
-      // Set a 3-second timeout before navigating to the login page
+      // Navigate to login after 1 second
       setTimeout(() => {
         navigate("/login");
-      }, 1000); // 1000 milliseconds = 1 second
+      }, 1000);
     } catch (error) {
-      console.log(error);
-      setMsg(error.response?.data?.message || "An error occurred");
-      setIsSuccess(false); // Set to false on failure
-
-      // Clear the input fields after failed registration
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setRole("");
+      toast.error(error.response?.data?.message || "An error occurred"); // Show error toast
+      setIsSuccess(false);
     }
   };
 
@@ -110,24 +102,20 @@ const Register = () => {
           <button type="submit" className="btn btn-primary w-100">
             Register
           </button>
-          <div className="text-center">
-            <span>Already have an Account?</span>
-            <button className="btn btn-link d-inline p-0" onClick={gotoLogin}>
+          <div className="text-center mt-3">
+            <span>Already have an account?</span>
+            <button
+              className="btn btn-link d-inline p-0"
+              type="button"
+              onClick={gotoLogin}
+            >
               Login
             </button>
           </div>
         </form>
 
-        {/* Conditionally apply text-primary for success or text-danger for failure */}
-        {msg && (
-          <h1
-            className={`text-center ${
-              isSuccess ? "text-primary" : "text-danger"
-            }`}
-          >
-            {msg}
-          </h1>
-        )}
+        {/* ToastContainer added here */}
+        <ToastContainer />
       </div>
     </div>
   );

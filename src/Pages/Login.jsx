@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState(""); // State for the message
   const [isSuccess, setIsSuccess] = useState(null); // New state to track success or failure
   const navigate = useNavigate();
 
@@ -26,7 +27,8 @@ const Login = ({ setToken }) => {
         "http://localhost:5000/api/user/login-user",
         payload
       );
-      setMsg(res.data.message);
+      toast.success(res.data.message); // Show success toast
+
       setToken(res.data.token);
       setIsSuccess(true); // Set success to true if the request is successful
 
@@ -40,9 +42,8 @@ const Login = ({ setToken }) => {
       }, 1000);
     } catch (error) {
       console.log(error);
-      setMsg(error.response?.data?.message || "An error occurred");
-      setIsSuccess(false); // Set success to false if the request fails
-
+      toast.error(error.response?.data?.message || "An error occurred"); // Show error toast
+      setIsSuccess(false);
       // Clear the input fields after failed login
       setEmail("");
       setPassword("");
@@ -95,16 +96,8 @@ const Login = ({ setToken }) => {
             </button>
           </div>
         </form>
-        {/* Display the message with conditional color */}
-        {msg && (
-          <h2
-            className={`text-center ${
-              isSuccess ? "text-primary" : "text-danger"
-            }`}
-          >
-            {msg}
-          </h2>
-        )}
+        {/* ToastContainer added here */}
+        <ToastContainer />
       </div>
     </div>
   );
